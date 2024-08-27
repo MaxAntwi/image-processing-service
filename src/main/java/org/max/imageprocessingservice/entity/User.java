@@ -27,7 +27,8 @@ public class User implements UserDetails {
 
     private String name;
 
-    private Role role = Role.User;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -41,7 +42,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
@@ -65,6 +66,3 @@ public class User implements UserDetails {
     }
 }
 
-enum Role {
-    User, Admin
-}

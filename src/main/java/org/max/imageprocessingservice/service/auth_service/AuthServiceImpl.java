@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.max.imageprocessingservice.dto.SignInRequest;
 import org.max.imageprocessingservice.dto.SignUpRequest;
 import org.max.imageprocessingservice.dto.AuthResponse;
+import org.max.imageprocessingservice.entity.Role;
 import org.max.imageprocessingservice.entity.User;
 import org.max.imageprocessingservice.repository.UserRepository;
 import org.max.imageprocessingservice.util.JwtUtil;
@@ -37,6 +38,7 @@ public class AuthServiceImpl implements AuthService{
                 .builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.User)
                 .name(request.getName())
                 .build();
         userRepository.save(newUser);
