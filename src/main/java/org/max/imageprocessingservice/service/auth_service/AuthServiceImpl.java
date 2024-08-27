@@ -7,6 +7,9 @@ import org.max.imageprocessingservice.dto.SignUpRequest;
 import org.max.imageprocessingservice.dto.AuthResponse;
 import org.max.imageprocessingservice.entity.Role;
 import org.max.imageprocessingservice.entity.User;
+import org.max.imageprocessingservice.exception.AuthFailedException;
+import org.max.imageprocessingservice.exception.UserAlreadyExists;
+import org.max.imageprocessingservice.exception.UserNotFoundException;
 import org.max.imageprocessingservice.repository.UserRepository;
 import org.max.imageprocessingservice.util.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -32,7 +35,7 @@ public class AuthServiceImpl implements AuthService{
         Optional<User> user = userRepository.findByUsername(request.getUsername());
         if (user.isPresent()) {
             log.error("User {} already exists", request.getUsername());
-            throw new RuntimeException("User Already Exists");
+            throw new UserAlreadyExists("User Already Exists", HttpStatus.FORBIDDEN.value());
         }
         User newUser = User
                 .builder()
@@ -58,7 +61,7 @@ public class AuthServiceImpl implements AuthService{
         Optional<User> user = userRepository.findByUsername(request.getUsername());
         if (user.isEmpty()) {
             log.error("User {} doesn't exist", request.getUsername());
-            throw new RuntimeException("User doesn't Exists");
+            throw new UserNotFoundException("User doesn't Exists", HttpStatus.FORBIDDEN.value());
         }
         User verifiedUser = user.get();
         try {
@@ -73,16 +76,13 @@ public class AuthServiceImpl implements AuthService{
                         .message("Sign In Successful")
                         .name(verifiedUser.getName())
                         .username(verifiedUser.getUsername())
+                        .statusCode(HttpStatus.OK.value())
                         .token(token)
                         .build();
             }
         } catch (Exception e) {
             log.error("Authentication failed", e);
         }
-        return AuthResponse
-                .builder()
-                .message("Sign In Failed")
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build();
+        throw new AuthFailedException("Sign in failed", HttpStatus.FORBIDDEN.value());
     }
 }

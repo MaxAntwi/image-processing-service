@@ -9,8 +9,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.max.imageprocessingservice.entity.User;
+import org.max.imageprocessingservice.exception.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Base64;
@@ -21,6 +24,7 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class JwtUtil {
 
     @Value("${JWT_SECRET}")
@@ -53,7 +57,7 @@ public class JwtUtil {
     public String extractUsername(String token) {
         String[] chunks = token.split("\\.");
         if (chunks.length < 2) {
-            throw new RuntimeException("Token does not contain a valid payload");
+            throw new InvalidTokenException("Token does not contain a valid payload", HttpStatus.FORBIDDEN.value());
         }
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String payload = new String(decoder.decode(chunks[1]));
@@ -61,11 +65,12 @@ public class JwtUtil {
             JsonNode jsonNode = objectMapper.readTree(payload);
             JsonNode emailNode = jsonNode.get("email");
             if (emailNode == null) {
-                throw new RuntimeException("Email not found in token payload");
+                throw new InvalidTokenException("Email not found in token payload",  HttpStatus.FORBIDDEN.value());
             }
             return emailNode.asText();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error extracting username from token" + e);
+            log.error("Error parsing token", e);
+            throw new InvalidTokenException("Invalid Token",  HttpStatus.FORBIDDEN.value());
         }
     }
 
