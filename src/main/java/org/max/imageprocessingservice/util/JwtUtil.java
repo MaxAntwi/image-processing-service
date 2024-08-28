@@ -63,11 +63,11 @@ public class JwtUtil {
         String payload = new String(decoder.decode(chunks[1]));
         try{
             JsonNode jsonNode = objectMapper.readTree(payload);
-            JsonNode emailNode = jsonNode.get("email");
-            if (emailNode == null) {
+            JsonNode username = jsonNode.get("username");
+            if (username == null) {
                 throw new InvalidTokenException("Email not found in token payload",  HttpStatus.FORBIDDEN.value());
             }
-            return emailNode.asText();
+            return username.asText();
         } catch (JsonProcessingException e) {
             log.error("Error parsing token", e);
             throw new InvalidTokenException("Invalid Token",  HttpStatus.FORBIDDEN.value());
