@@ -9,4 +9,6 @@ public interface ImageService {
     GlobalResponse getImages();
 
     byte[] downloadImage(Long id);
+
+    byte[] resizeImage(Long id, int width, int height);
 }

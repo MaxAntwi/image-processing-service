@@ -31,4 +31,10 @@ public class ImageController {
         byte[] image = imageService.downloadImage(id);
         return ResponseEntity.status(HttpStatus.OK.value()).contentType(MediaType.IMAGE_PNG).body(image);
     }
+
+    @GetMapping("{id}/resize")
+    public ResponseEntity<?> resizeImage(@PathVariable Long id, @RequestParam Integer width, @RequestParam Integer height) {
+        byte[] image = imageService.resizeImage(id, width, height);
+        return ResponseEntity.status(HttpStatus.OK.value()).contentType(MediaType.IMAGE_PNG).body(image);
+    }
 }

@@ -72,4 +72,15 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageException(e.getMessage(), HttpStatus.FORBIDDEN.value());
         }
     }
+
+    @Override
+    public byte[] resizeImage(Long id, int width, int height) {
+        Image image = imageRepository.findById(id).orElseThrow();
+        try {
+            byte[] imageData = ImageUtils.decompressImage(image.getImageData());
+            return ImageUtils.resizeImage(imageData, width, height);
+        }catch (Exception e) {
+            throw new ImageException(e.getMessage(), HttpStatus.FORBIDDEN.value());
+        }
+    }
 }

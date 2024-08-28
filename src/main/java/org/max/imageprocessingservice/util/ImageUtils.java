@@ -1,9 +1,13 @@
 package org.max.imageprocessingservice.util;
 
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.max.imageprocessingservice.exception.ImageException;
 import org.springframework.http.HttpStatus;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
@@ -48,6 +52,22 @@ public class ImageUtils {
             outputStream.close();
             return outputStream.toByteArray();
         } catch (IOException | DataFormatException e) {
+            log.error(e.getMessage());
+            throw new ImageException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+        }
+    }
+
+    public static byte[] resizeImage(byte[] image, int newWidth, int newHeight) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(image);
+        try {
+            BufferedImage bufferedImage = ImageIO.read(inputStream);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Thumbnails.of(bufferedImage)
+                    .size(newWidth, newHeight)
+                    .outputFormat("png")
+                    .toOutputStream(outputStream);
+            return outputStream.toByteArray();
+        } catch (Exception e) {
             log.error(e.getMessage());
             throw new ImageException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
         }
