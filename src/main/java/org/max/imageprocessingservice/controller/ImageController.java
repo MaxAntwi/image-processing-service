@@ -37,4 +37,10 @@ public class ImageController {
         byte[] image = imageService.resizeImage(id, width, height);
         return ResponseEntity.status(HttpStatus.OK.value()).contentType(MediaType.IMAGE_PNG).body(image);
     }
+
+    @GetMapping("{id}/rotate")
+    public ResponseEntity<?> rotateImage(@PathVariable Long id, @RequestParam double angle) {
+        byte[] image = imageService.rotateImage(id, angle);
+        return ResponseEntity.status(HttpStatus.OK.value()).contentType(MediaType.IMAGE_PNG).body(image);
+    }
 }

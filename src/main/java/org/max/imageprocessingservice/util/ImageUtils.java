@@ -72,4 +72,22 @@ public class ImageUtils {
             throw new ImageException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
         }
     }
+
+    public static byte[] rotateImage(byte[] image, double angle) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(image);
+        try {
+            BufferedImage bufferedImage = ImageIO.read(inputStream);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Thumbnails.of(bufferedImage)
+                    .rotate(angle)
+                    .outputFormat("png")
+                    .size(200, 200)
+                    .toOutputStream(outputStream);
+            return outputStream.toByteArray();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new ImageException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+        }
+    }
+
 }

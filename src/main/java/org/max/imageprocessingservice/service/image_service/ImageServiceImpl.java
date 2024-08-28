@@ -83,4 +83,15 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageException(e.getMessage(), HttpStatus.FORBIDDEN.value());
         }
     }
+
+    @Override
+    public byte[] rotateImage(Long id, double angle) {
+        Image image = imageRepository.findById(id).orElseThrow();
+        try {
+            byte[] imageData = ImageUtils.decompressImage(image.getImageData());
+            return ImageUtils.rotateImage(imageData, angle);
+        }catch (Exception e) {
+            throw new ImageException(e.getMessage(), HttpStatus.FORBIDDEN.value());
+        }
+    }
 }

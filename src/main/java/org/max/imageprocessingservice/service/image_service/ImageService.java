@@ -11,4 +11,6 @@ public interface ImageService {
     byte[] downloadImage(Long id);
 
     byte[] resizeImage(Long id, int width, int height);
+
+    byte[] rotateImage(Long id, double angle);
 }
