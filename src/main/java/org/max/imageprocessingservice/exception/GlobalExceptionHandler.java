@@ -26,4 +26,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidTokenException(InvalidTokenException ex) {
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ImageException.class)
+    public ResponseEntity<String> handleImageException(ImageException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
+    }
 }
