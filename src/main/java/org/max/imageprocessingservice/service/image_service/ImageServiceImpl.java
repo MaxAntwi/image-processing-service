@@ -3,6 +3,7 @@ package org.max.imageprocessingservice.service.image_service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.max.imageprocessingservice.dto.GlobalResponse;
+import org.max.imageprocessingservice.dto.ImageResponse;
 import org.max.imageprocessingservice.entity.Image;
 import org.max.imageprocessingservice.exception.ImageException;
 import org.max.imageprocessingservice.repository.ImageRepository;
@@ -10,6 +11,8 @@ import org.max.imageprocessingservice.util.ImageUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -36,6 +39,28 @@ public class ImageServiceImpl implements ImageService {
             log.error(e.getMessage());
             throw new ImageException(e.getMessage(), HttpStatus.FORBIDDEN.value());
         }
+    }
+
+    @Override
+    public GlobalResponse getImages() {
+        List<Image> images = imageRepository.findAll();
+        List<ImageResponse> imageResponses =  images.stream().map(this::getImageResponse).toList();
+        return GlobalResponse
+                .builder()
+                .response("Image List")
+                .responseCode(HttpStatus.OK.value())
+                .images(imageResponses)
+                .build();
+    }
+
+    public ImageResponse getImageResponse(Image image) {
+        return ImageResponse
+                .builder()
+                .original(image.getOriginal())
+                .filename(image.getFilename())
+                .id(image.getId())
+                .fileType(image.getFileType())
+                .build();
     }
 
     @Override

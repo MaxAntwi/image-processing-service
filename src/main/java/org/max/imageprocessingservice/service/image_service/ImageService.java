@@ -6,5 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
     GlobalResponse uploadImage(MultipartFile file);
 
+    GlobalResponse getImages();
+
     byte[] downloadImage(Long id);
 }
