@@ -8,6 +8,7 @@ import org.max.imageprocessingservice.entity.Image;
 import org.max.imageprocessingservice.exception.ImageException;
 import org.max.imageprocessingservice.repository.ImageRepository;
 import org.max.imageprocessingservice.util.ImageUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +43,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Cacheable(value = "retrieveImages")
     public GlobalResponse getImages() {
         List<Image> images = imageRepository.findAll();
         List<ImageResponse> imageResponses =  images.stream().map(this::getImageResponse).toList();
@@ -64,6 +66,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Cacheable(value = "download", key = "#id")
     public byte[] downloadImage(Long id) {
         Image image = imageRepository.findById(id).orElseThrow();
         try {
@@ -74,6 +77,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Cacheable(value = "resize", key = "#id+'-'+#width + '-'+#height")
     public byte[] resizeImage(Long id, int width, int height) {
         Image image = imageRepository.findById(id).orElseThrow();
         try {
@@ -84,6 +88,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Cacheable(value = "rotate", key = "#id+'-'+#angle")
     @Override
     public byte[] rotateImage(Long id, double angle) {
         Image image = imageRepository.findById(id).orElseThrow();

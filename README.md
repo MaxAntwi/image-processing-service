@@ -25,6 +25,7 @@ This project is an Image Processing Service built using Java Spring Boot. It all
     - Request Body:
       ```json
       {
+        "name": "name",
         "username": "user1",
         "password": "password123"
       }
