@@ -1,7 +1,9 @@
 package org.max.imageprocessingservice.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @AllArgsConstructor
@@ -9,7 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class GlobalResponse {
+@JsonSerialize
+public class GlobalResponse implements Serializable {
     private Long imageId;
     private String response;
     private int responseCode;

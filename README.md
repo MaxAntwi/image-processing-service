@@ -25,6 +25,7 @@ This project is an Image Processing Service built using Java Spring Boot. It all
     - Request Body:
       ```json
       {
+        "name": "name",
         "username": "user1",
         "password": "password123"
       }
@@ -102,9 +103,16 @@ The following transformations are supported:
 - **Spring Boot**
 - **Spring Security with JWT**
 - **Spring Data JPA**
+- **Redis**: In-memory data store used for caching.
 - **Image Processing Libraries**: `Thumbnailator` or `imgscalr` for image transformations.
 - **MySQL/PostgreSQL**: For storing user and image metadata.
 - **Local Storage or Cloud Storage**: To store uploaded and transformed images.
+
+## Prerequisites
+- **Java 17** or higher
+- **Maven** (for building the project)
+- **Redis** (can be run using Docker)
+- **Docker and Docker Compose** (optional, for running Redis)
 
 ## Installation
 
