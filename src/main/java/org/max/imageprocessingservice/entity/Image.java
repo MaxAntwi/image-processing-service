@@ -17,9 +17,9 @@ public class Image {
     private String filename;
     private String fileType;
     private Long original;
-    @Lob
+    @Lob()
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 }
-
 //Note: had to run the script below to alter image table
 //ALTER TABLE images MODIFY COLUMN image_data LONGBLOB
